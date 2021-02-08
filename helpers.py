@@ -82,16 +82,18 @@ def provide_file(kind, index):
     if os.path.exists(file_path):
         return file_path
 
-    # when the public eos data dir is accessible, copy the file in the the user data dir
+    # when the public eos data dir is accessible, copy the file into the user data dir
     has_eos = os.access(eos_data_dir, os.R_OK)
     if has_eos:
         public_path = os.path.join(eos_data_dir, file_name)
+        print(f"copy file from {public_path}")
         shutil.copy2(public_path, file_path)
         return file_path
 
     # otherwise, download it using the public CERNBox url
     quote = six.moves.urllib.parse.quote
     url = eos_data_url.format(quote("/", safe=""), quote(file_name, safe=""))
+    print(f"wget file from {url}")
     _wget(url, file_path)
 
     return file_path
